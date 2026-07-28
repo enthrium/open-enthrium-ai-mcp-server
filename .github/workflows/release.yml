@@ -19,6 +19,7 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
+        working-directory: server
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Build Windows MCP
@@ -43,6 +44,7 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
+        working-directory: server
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Build Linux MCP
@@ -72,6 +74,7 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
+        working-directory: server
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Build macOS MCP
