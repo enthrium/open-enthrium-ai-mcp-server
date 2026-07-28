@@ -1,0 +1,85 @@
+name: Release OE MCP
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+
+  build-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Build Windows MCP
+        working-directory: server
+        run: yarn build:mcp-win
+
+      - name: Upload oe-mcp-win.exe
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: server/mcp/dist/oe-mcp-win.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Build Linux MCP
+        working-directory: server
+        run: yarn build:mcp-linux
+
+      - name: Zip MCP samples
+        run: cd server/mcp && zip -r oe-mcp-samples.zip samples/
+
+      - name: Upload Linux binary and samples
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            server/mcp/dist/oe-mcp-linux
+            server/mcp/oe-mcp-samples.zip
+
+  build-macos:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Build macOS MCP
+        working-directory: server
+        run: yarn build:mcp-macos
+
+      - name: Upload oe-mcp-macos
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: server/mcp/dist/oe-mcp-macos

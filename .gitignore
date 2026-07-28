@@ -1,0 +1,7 @@
+node_modules/
+server/mcp/bundle/
+server/mcp/dist/
+server/mcp/sea-prep.blob
+server/mcp/oe-mcp-memory.json
+.env
+*.log
