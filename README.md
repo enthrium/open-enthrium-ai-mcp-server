@@ -1,7 +1,7 @@
 <div align="center">
 
-<h1>OE MCP Server</h1>
-<h3>Enterprise MCP Server · Apache-2.0 · Claude Code · Cursor · Windsurf · Claude Desktop</h3>
+<h1>Open Enterprise AI MCP Server</h1>
+<h3>aka OE MCP · Enterprise MCP Server · Apache-2.0 · Claude Code · Cursor · Windsurf · Claude Desktop</h3>
 
 **Connect any AI coding assistant to your enterprise data — databases, files, APIs, and more — via a single binary.**
 
