@@ -303,7 +303,7 @@ OE MCP Server is part of the [Open Enterprise](https://openenterprise.info) plat
 | | |
 |---|---|
 | ⚡ **Agent Runtime** | [open-enterprise-ai-agent-runtime](https://github.com/openenterprise-info/open-enterprise-ai-agent-runtime) — run YAML agents as CLI or HTTP server |
-| 🖥️ **Platform (Docker)** | [open-enterprise-community](https://github.com/openenterprise-info/open-enterprise-community) — full web app with workspaces, RAG, Agent Builder, DLP |
+| 🖥️ **Platform (Docker)** | [open-enterprise-community](https://github.com/openenterprise-info/open-enterprise-ai-platform) — full web app with workspaces, RAG, Agent Builder, DLP |
 | 🌐 **Website** | [openenterprise.info](https://openenterprise.info) |
 
 ---
