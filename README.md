@@ -192,7 +192,9 @@ memory:
 
 ```yaml
 connectors:
-  - name: production-db
+
+  # ── SQL Databases ──────────────────────────────────────
+  - name: my-postgres
     type: postgresql
     host: db.company.com
     port: 5432
@@ -200,17 +202,105 @@ connectors:
     user: readonly
     password: secret
 
-  - name: company-github
+  - name: my-mysql
+    type: mysql
+    host: localhost
+    port: 3306
+    database: mydb
+    user: root
+    password: secret
+
+  # ── NoSQL ──────────────────────────────────────────────
+  - name: my-mongo
+    type: mongodb
+    uri: mongodb://localhost:27017
+    database: mydb
+
+  - name: my-redis
+    type: redis
+    host: localhost
+    port: 6379
+
+  - name: my-elastic
+    type: elasticsearch
+    node: https://localhost:9200
+    apiKey: xxxxxxxxxxxx
+
+  # ── Object Storage ─────────────────────────────────────
+  - name: my-s3
+    type: s3
+    accessKeyId: AKIAXXXXXXXX
+    secretAccessKey: xxxxxxxxxxxx
+    region: us-east-1
+    bucket: my-bucket
+
+  # ── Cloud Drives ───────────────────────────────────────
+  - name: my-gdrive
+    type: gdrive
+    clientId: xxxx.apps.googleusercontent.com
+    clientSecret: xxxx
+    refreshToken: xxxx
+
+  # ── Code & Issue Tracking ──────────────────────────────
+  - name: my-github
     type: github
-    token: ghp_...
+    token: ghp_xxxxxxxxxxxx
 
-  - name: team-slack
+  - name: my-jira
+    type: jira
+    host: https://company.atlassian.net
+    email: you@company.com
+    apiToken: xxxx
+
+  # ── Team Messaging ─────────────────────────────────────
+  - name: my-slack
     type: slack
-    botToken: xoxb-...
+    botToken: xoxb-xxxxxxxxxxxx
 
-  - name: source-code
+  # ── Email ──────────────────────────────────────────────
+  - name: my-gmail
+    type: gmail
+    clientId: xxxx.apps.googleusercontent.com
+    clientSecret: xxxx
+    refreshToken: xxxx
+
+  - name: my-smtp
+    type: smtp
+    host: smtp.company.com
+    port: 587
+    user: you@company.com
+    password: secret
+
+  # ── SSH / Remote Server ────────────────────────────────
+  - name: my-server
+    type: ssh
+    host: server.company.com
+    port: 22
+    username: ubuntu
+    privateKey: /path/to/key.pem
+
+  # ── Filesystem ─────────────────────────────────────────
+  - name: my-codebase
     type: filesystem
     basePath: /home/user/projects
+
+  # ── REST API ───────────────────────────────────────────
+  - name: my-api
+    type: rest-api
+    baseUrl: https://api.company.com
+    headers:
+      Authorization: Bearer xxxx
+
+  # ── CRM ────────────────────────────────────────────────
+  - name: my-hubspot
+    type: hubspot
+    accessToken: pat-xxxxxxxxxxxx
+
+  # ── Message Queues ─────────────────────────────────────
+  - name: my-kafka
+    type: kafka
+    brokers:
+      - localhost:9092
 
 memory:
   - key: team
