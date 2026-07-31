@@ -1,0 +1,43 @@
+{
+  "name": "@openenterprise/oe-mcp",
+  "version": "1.4.2",
+  "description": "Connect Claude Code, Cursor & Windsurf to 2,600+ enterprise data sources with one binary.",
+  "homepage": "https://www.openenterprise.info/mcp.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openenterprise-info/open-enterprise-ai-mcp-server.git"
+  },
+  "license": "Apache-2.0",
+  "mcpName": "io.github.openenterprise-info/oe-mcp",
+  "bin": {
+    "oe-mcp": "bin.js"
+  },
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "files": [
+    "bin.js",
+    "postinstall.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "cursor",
+    "windsurf",
+    "ai",
+    "enterprise",
+    "database",
+    "postgresql",
+    "mysql",
+    "mongodb",
+    "s3",
+    "slack",
+    "github",
+    "ssh",
+    "rest-api"
+  ]
+}
