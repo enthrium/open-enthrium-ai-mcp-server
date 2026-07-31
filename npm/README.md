@@ -23,6 +23,7 @@ Replace 50+ individual MCP servers with one config file.
 
 ```yaml
 connectors:
+  # SQL Database
   - name: my-postgres
     type: postgresql
     host: localhost
@@ -31,9 +32,116 @@ connectors:
     user: postgres
     password: secret
 
+  # MySQL
+  - name: my-mysql
+    type: mysql
+    host: localhost
+    port: 3306
+    database: mydb
+    user: root
+    password: secret
+
+  # MongoDB
+  - name: my-mongo
+    type: mongodb
+    uri: mongodb://localhost:27017
+    database: mydb
+
+  # Redis
+  - name: my-redis
+    type: redis
+    host: localhost
+    port: 6379
+
+  # AWS S3
+  - name: my-s3
+    type: s3
+    accessKeyId: AKIAXXXXXXXX
+    secretAccessKey: xxxxxxxxxxxx
+    region: us-east-1
+    bucket: my-bucket
+
+  # Google Drive
+  - name: my-gdrive
+    type: gdrive
+    clientId: xxxx.apps.googleusercontent.com
+    clientSecret: xxxx
+    refreshToken: xxxx
+
+  # GitHub
+  - name: my-github
+    type: github
+    token: ghp_xxxxxxxxxxxx
+
+  # Slack
+  - name: my-slack
+    type: slack
+    botToken: xoxb-xxxxxxxxxxxx
+
+  # Gmail
+  - name: my-gmail
+    type: gmail
+    clientId: xxxx.apps.googleusercontent.com
+    clientSecret: xxxx
+    refreshToken: xxxx
+
+  # SMTP (any email)
+  - name: my-email
+    type: smtp
+    host: smtp.company.com
+    port: 587
+    user: you@company.com
+    password: secret
+
+  # SSH / Remote Server
+  - name: my-server
+    type: ssh
+    host: server.company.com
+    port: 22
+    username: ubuntu
+    privateKey: /path/to/key.pem
+
+  # Local Filesystem
   - name: my-codebase
     type: filesystem
     basePath: /home/user/projects/myapp
+
+  # REST API
+  - name: my-api
+    type: rest-api
+    baseUrl: https://api.company.com
+    headers:
+      Authorization: Bearer xxxx
+
+  # Jira
+  - name: my-jira
+    type: jira
+    host: https://company.atlassian.net
+    email: you@company.com
+    apiToken: xxxx
+
+  # HubSpot
+  - name: my-hubspot
+    type: hubspot
+    accessToken: pat-xxxxxxxxxxxx
+
+  # Kafka
+  - name: my-kafka
+    type: kafka
+    brokers:
+      - localhost:9092
+
+  # Elasticsearch
+  - name: my-elastic
+    type: elasticsearch
+    node: https://localhost:9200
+    apiKey: xxxxxxxxxxxx
+
+memory:
+  - key: team
+    value: "Platform Engineering"
+  - key: environment
+    value: "production"
 ```
 
 **2. Add to Claude Code** (`~/.mcp.json`)
