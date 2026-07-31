@@ -36,12 +36,25 @@ Connect Claude Code, Cursor, Windsurf, or Claude Desktop to your PostgreSQL data
 
 No binary download needed — `npx` handles everything automatically:
 
+**macOS / Linux:**
 ```json
 {
   "mcpServers": {
     "oe-mcp": {
       "command": "npx",
       "args": ["@openenterprise/oe-mcp", "--stdio", "/path/to/oe-mcp.yaml"]
+    }
+  }
+}
+```
+
+**Windows:** use `npx.cmd` instead of `npx`:
+```json
+{
+  "mcpServers": {
+    "oe-mcp": {
+      "command": "npx.cmd",
+      "args": ["@openenterprise/oe-mcp", "--stdio", "C:\\path\\to\\oe-mcp.yaml"]
     }
   }
 }
@@ -102,12 +115,25 @@ memory:
 
 **Option A — via npm (recommended, no binary download needed):**
 
+macOS / Linux:
 ```json
 {
   "mcpServers": {
     "oe-mcp": {
       "command": "npx",
       "args": ["@openenterprise/oe-mcp", "--stdio", "/path/to/oe-mcp.yaml"]
+    }
+  }
+}
+```
+
+Windows:
+```json
+{
+  "mcpServers": {
+    "oe-mcp": {
+      "command": "npx.cmd",
+      "args": ["@openenterprise/oe-mcp", "--stdio", "C:\\path\\to\\oe-mcp.yaml"]
     }
   }
 }
