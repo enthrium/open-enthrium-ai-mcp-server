@@ -10,6 +10,7 @@
 [![Windows](https://img.shields.io/badge/Windows-Download-0078D4?logo=windows&logoColor=white)](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server/releases/latest/download/oe-mcp-win.exe)
 [![Linux](https://img.shields.io/badge/Linux-Download-E95420?logo=linux&logoColor=white)](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server/releases/latest/download/oe-mcp-linux)
 [![macOS](https://img.shields.io/badge/macOS-Download-000000?logo=apple&logoColor=white)](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server/releases/latest/download/oe-mcp-macos)
+[![npm](https://img.shields.io/npm/v/@openenterprise/oe-mcp?color=0284c7&label=npm)](https://www.npmjs.com/package/@openenterprise/oe-mcp)
 [![Website](https://img.shields.io/badge/Website-openenterprise.info-4f46e5)](https://www.openenterprise.info)
 [![Discord](https://img.shields.io/badge/Discord-Community-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/vWsZ24Msn)
 
@@ -31,7 +32,28 @@ Connect Claude Code, Cursor, Windsurf, or Claude Desktop to your PostgreSQL data
 
 ---
 
-## Download
+## Quick Start via npm (Recommended)
+
+No binary download needed — `npx` handles everything automatically:
+
+```json
+{
+  "mcpServers": {
+    "oe-mcp": {
+      "command": "npx",
+      "args": ["@openenterprise/oe-mcp", "--stdio", "/path/to/oe-mcp.yaml"]
+    }
+  }
+}
+```
+
+Add this to `~/.mcp.json` (Claude Code) and reload VS Code. Done.
+
+---
+
+## Download (Standalone Binary)
+
+Prefer a standalone binary? Download for your platform:
 
 | Platform | Binary |
 |---|---|
@@ -42,7 +64,7 @@ Connect Claude Code, Cursor, Windsurf, or Claude Desktop to your PostgreSQL data
 
 ---
 
-## Quick Start
+## Quick Start (Binary)
 
 **1. Download the binary for your OS**
 
@@ -78,9 +100,20 @@ memory:
 
 ## Claude Code (VS Code Extension)
 
-Claude Code launches the binary automatically as a child process via `stdio`. No manual server start needed.
+**Option A — via npm (recommended, no binary download needed):**
 
-Add to `~/.mcp.json` (or your workspace `.mcp.json`):
+```json
+{
+  "mcpServers": {
+    "oe-mcp": {
+      "command": "npx",
+      "args": ["@openenterprise/oe-mcp", "--stdio", "/path/to/oe-mcp.yaml"]
+    }
+  }
+}
+```
+
+**Option B — via downloaded binary:**
 
 ```json
 {
@@ -93,12 +126,6 @@ Add to `~/.mcp.json` (or your workspace `.mcp.json`):
   }
 }
 ```
-
-> **Windows example:**
-> ```json
-> "command": "C:\\oe-mcp\\oe-mcp-win.exe",
-> "args": ["--stdio", "C:\\oe-mcp\\oe-mcp.yaml"]
-> ```
 
 Reload VS Code — the MCP tools appear automatically in Claude Code.
 
@@ -303,7 +330,7 @@ OE MCP Server is part of the [Open Enterprise](https://openenterprise.info) plat
 | | |
 |---|---|
 | ⚡ **Agent Runtime** | [open-enterprise-ai-agent-runtime](https://github.com/openenterprise-info/open-enterprise-ai-agent-runtime) — run YAML agents as CLI or HTTP server |
-| 🖥️ **Platform (Docker)** | [open-enterprise-community](https://github.com/openenterprise-info/open-enterprise-ai-platform) — full web app with workspaces, RAG, Agent Builder, DLP |
+| 🖥️ **Platform (Docker)** | [open-enterprise-ai-platform](https://github.com/openenterprise-info/open-enterprise-ai-platform) — full web app with workspaces, RAG, Agent Builder, DLP |
 | 🌐 **Website** | [openenterprise.info](https://openenterprise.info) |
 
 ---
