@@ -3,8 +3,8 @@
 **Connect Claude Code, Cursor & Windsurf to 2,600+ enterprise data sources — databases, APIs, files, SSH, messaging, and more. One binary. One YAML config.**
 
 [![npm](https://img.shields.io/npm/v/@openenterprise/oe-mcp?color=0284c7)](https://www.npmjs.com/package/@openenterprise/oe-mcp)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-4f46e5.svg)](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server/blob/main/LICENSE)
-[![Website](https://img.shields.io/badge/Website-openenterprise.info-4f46e5)](https://www.openenterprise.info/mcp.html)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-4f46e5.svg)](https://github.com/enthrium/open-enthrium-ai-mcp-server/blob/main/LICENSE)
+[![Website](https://img.shields.io/badge/Website-openenthrium.com-4f46e5)](https://www.openenthrium.com/mcp.html)
 [![Discord](https://img.shields.io/badge/Discord-Community-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/vWsZ24Msn)
 
 ---
@@ -207,13 +207,13 @@ Every session includes persistent memory tools:
 
 ## Links
 
-- [Full Documentation](https://www.openenterprise.info/mcp.html)
-- [GitHub Repository](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server)
+- [Full Documentation](https://www.openenthrium.com/mcp.html)
+- [GitHub Repository](https://github.com/enthrium/open-enthrium-ai-mcp-server)
 - [Discord Community](https://discord.com/invite/vWsZ24Msn)
-- [OE Platform](https://www.openenterprise.info/platform.html) — full web app with Agent Builder, RAG, workspaces
+- [OE Platform](https://www.openenthrium.com/platform.html) — full web app with Agent Builder, RAG, workspaces
 
 ---
 
 ## License
 
-[Apache-2.0](https://github.com/openenterprise-info/open-enterprise-ai-mcp-server/blob/main/LICENSE) — free to use, modify, and deploy for any purpose including commercial use.
+[Apache-2.0](https://github.com/enthrium/open-enthrium-ai-mcp-server/blob/main/LICENSE) — free to use, modify, and deploy for any purpose including commercial use.
