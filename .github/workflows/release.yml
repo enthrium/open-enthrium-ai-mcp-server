@@ -86,3 +86,43 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: server/mcp/dist/oe-mcp-macos
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-linux, build-macos]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish @openenterprise/oe-mcp to npm
+        working-directory: server/mcp/npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  update-website:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-linux, build-macos]
+    steps:
+      - name: Clone website repo
+        run: git clone https://x-access-token:${{ secrets.WEBSITE_PAT }}@github.com/openenterprise-info/open-enterprise-website.git website
+
+      - name: Update version in mcp.html
+        run: |
+          VERSION="${{ github.ref_name }}"
+          cd website
+          sed -i -E "s/v[0-9]+\.[0-9]+\.[0-9]+/${VERSION}/g" mcp.html
+
+      - name: Commit and push
+        run: |
+          VERSION="${{ github.ref_name }}"
+          cd website
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mcp.html
+          git diff --cached --quiet || git commit -m "chore: update OE MCP download links to ${VERSION}"
+          git push
