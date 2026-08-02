@@ -1,10 +1,10 @@
-# Contributing to Open Enterprise AI MCP Server
+# Contributing to Open Enthrium AI MCP Server
 
 Thank you for your interest in contributing. This document covers the repo structure, what belongs here vs the platform repo, and how to submit a contribution.
 
 ## Before You Start
 
-Open an issue first before writing code. PRs without prior discussion may be closed even if the code is good.
+Open an issue first before writing code. This lets us align on whether the change fits the project direction before you invest time building it. PRs that arrive without a prior discussion may be closed even if the code is good.
 
 ---
 
@@ -14,18 +14,18 @@ This repo contains the **standalone MCP server binary** — the MCP protocol imp
 
 | Contribution | Where it goes |
 |---|---|
-| New connector adapter (e.g. Salesforce, SAP) | [open-enterprise-community](https://github.com/openenterprise-info/open-enterprise-community) → `server/src/utils/tools/adapters/` |
+| New connector adapter (e.g. Salesforce, SAP) | [open-enthrium-ai-platform](https://github.com/enthrium/open-enthrium-ai-platform) → `server/src/utils/tools/adapters/` |
 | New sample `oe-mcp.yaml` config | **This repo** → `server/mcp/samples/<name>/` |
 | Bug in MCP server, stdio/serve transport, memory tools | **This repo** → `server/mcp/index.js` |
-| Bug in agent execution engine or adapters | [open-enterprise-community](https://github.com/openenterprise-info/open-enterprise-community) |
-| Runtime binary or agent samples | [open-enterprise-ai-agent-runtime](https://github.com/openenterprise-info/open-enterprise-ai-agent-runtime) |
+| Bug in agent execution engine or adapters | [open-enthrium-ai-platform](https://github.com/enthrium/open-enthrium-ai-platform) |
+| Runtime binary or agent samples | [open-enthrium-ai-agent-runtime](https://github.com/enthrium/open-enthrium-ai-agent-runtime) |
 
 ---
 
 ## Repo Structure
 
 ```
-open-enterprise-ai-mcp-server/
+open-enthrium-ai-mcp-server/
 ├── server/
 │   ├── mcp/
 │   │   ├── index.js          # MCP server — stdio + HTTP serve modes, memory tools
@@ -33,7 +33,7 @@ open-enterprise-ai-mcp-server/
 │   │   └── samples/          # Ready-to-use oe-mcp.yaml configs
 │   │       └── <name>/
 │   │           └── oe-mcp.yaml
-│   ├── src/                  # Shared adapter source (synced from community)
+│   ├── src/                  # Shared adapter source (synced from platform repo)
 │   │   └── utils/tools/
 │   │       ├── registry.js
 │   │       └── adapters/
@@ -92,9 +92,10 @@ Contributions that improve either transport or add new memory tool capabilities 
 ## How to Submit a PR
 
 1. Fork the repo and create a branch from `main`
-2. Name your branch: `feat/servicenow-sample`, `fix/stdio-encoding`, `docs/cursor-setup`
+2. Name your branch descriptively: `feat/servicenow-sample`, `fix/stdio-encoding`, `docs/cursor-setup`
 3. Keep PRs focused — one fix or feature per PR
-4. All PRs require at least one approval before merging
+4. Fill in the PR template completely
+5. All PRs require at least one approval from a maintainer before merging
 
 ---
 
@@ -103,15 +104,26 @@ Contributions that improve either transport or add new memory tool capabilities 
 - Match the style of the surrounding code
 - No commented-out code
 - No `console.log` left in production paths
+- If you add a new dependency, explain why an existing one couldn't work
 
 ---
 
 ## Reporting Bugs
 
-Include: what you did, what you expected, what happened, your OS, binary version, and AI app (Claude Code / Cursor / Windsurf).
+Use the Bug Report issue template. Include:
+- What you did
+- What you expected
+- What actually happened
+- Your environment (OS, binary version, AI app — Claude Code / Cursor / Windsurf)
 
 ---
 
 ## Security Issues
 
 Do **not** open a public issue for security vulnerabilities. See [SECURITY.md](SECURITY.md).
+
+---
+
+## Questions
+
+Open a GitHub Discussion rather than an issue if you have a question about how something works or whether an idea is worth pursuing.

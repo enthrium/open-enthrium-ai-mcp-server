@@ -420,7 +420,6 @@ All other connectors (PostgreSQL, MySQL, MongoDB, Redis, S3, Slack, GitHub, REST
 | **Helpdesk** | Zendesk, Freshdesk, ServiceNow |
 | **+ more** | Healthcare (FHIR), ERP (SAP), Marketing, Analytics, ... |
 
-
 ---
 
 ## Sample Configs
