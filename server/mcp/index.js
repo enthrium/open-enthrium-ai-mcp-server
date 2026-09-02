@@ -4,6 +4,9 @@
 const fs             = require("fs");
 const path           = require("path");
 const os             = require("os");
+
+// Load .env from parent server directory (works when run via `npm run mcp`)
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const yaml           = require("js-yaml");
 const express        = require("express");
 const cors           = require("cors");
@@ -68,7 +71,7 @@ function usage() {
    oe-mcp [config] [--port <port>]
 
  Options:
-   --port <port>    Port to listen on (default: 4040)
+   --port <port>    Port to listen on (default: MCP_PORT env or 3003)
    --stdio          Run in stdio mode (for Claude Code / Claude Desktop)
    --help, -h       Show this help
 
@@ -91,7 +94,7 @@ function usage() {
 }
 
 function parseArgs(args) {
-  const result = { config: "oe-mcp.json", port: null, stdio: false };
+  const result = { config: process.env.MCP_CONNECTOR_JSON || "oe-mcp.json", port: null, stdio: false };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--help" || args[i] === "-h")  usage();
     else if (args[i] === "--stdio")                { result.stdio = true; }
@@ -134,6 +137,53 @@ function loadConfig(filePath) {
     out += c;
   }
   return JSON.parse(out);
+}
+
+// ── LLM config resolver — API key always from DB, never from disk ─────────
+
+let _platformSetting;
+function getPlatformSetting() {
+  if (!_platformSetting) {
+    try { _platformSetting = require("../src/providers/llm/index.js"); } catch {}
+  }
+  return _platformSetting;
+}
+
+async function resolveLlmConfig(configLlm) {
+  const ps = getPlatformSetting();
+  const getSetting = ps?.getSetting || (() => Promise.resolve(null));
+
+  const provider = configLlm?.provider
+    || (await getSetting("llm_provider"))
+    || process.env.OE_LLM_PROVIDER
+    || "openai";
+
+  // API key: ALWAYS from DB — never from disk files
+  const apiKey = (await getSetting("llm_api_key"))
+    || process.env.OE_LLM_API_KEY
+    || "";
+
+  const model = configLlm?.model
+    || (await getSetting("llm_model"))
+    || process.env.OE_LLM_MODEL
+    || undefined;
+
+  const baseURL = configLlm?.baseURL
+    || (await getSetting("llm_base_url"))
+    || process.env.OE_LLM_BASE_URL
+    || undefined;
+
+  const azureEndpoint = configLlm?.azureEndpoint
+    || (await getSetting("llm_azure_endpoint"))
+    || process.env.OE_LLM_AZURE_ENDPOINT
+    || undefined;
+
+  const azureDeployment = configLlm?.azureDeployment
+    || (await getSetting("llm_azure_deployment"))
+    || process.env.OE_LLM_AZURE_DEPLOYMENT
+    || undefined;
+
+  return { provider, apiKey, model, baseURL, azureEndpoint, azureDeployment };
 }
 
 // ── connector matching for agent runs ────────────────────────────────────
@@ -278,7 +328,7 @@ async function runSkillsMcp(skills, parentOutput, agentFile, configFile, depth) 
     };
 
     try {
-      const { output } = await engine.run(agentSpec, config.llm, connectors, {
+      const { output } = await engine.run(agentSpec, await resolveLlmConfig(config.llm), connectors, {
         onToolCall:   () => {},
         onToolResult: () => {},
         onError:      (err) => { throw err; },
@@ -313,7 +363,7 @@ async function runAgentMcp(agentFile, inputContext, params, configFile, depth = 
   let output = typeof inputContext === "string" ? inputContext : "";
 
   if (hasWork) {
-    const llmResult = await engine.run(agentSpec, config.llm, connectors, {
+    const llmResult = await engine.run(agentSpec, await resolveLlmConfig(config.llm), connectors, {
       onToolCall:   () => {},
       onToolResult: () => {},
       onError:      (err) => { throw err; },
@@ -417,6 +467,11 @@ const AGENT_TOOLS = [
       },
       required: ["file"],
     },
+  },
+  {
+    name:        "list_agents",
+    description: "List all available OE Runtime agents from the agents directory. Returns agent name, description, and file path.",
+    inputSchema: { type: "object", properties: {} },
   },
   {
     name:        "list_pending_skills",
@@ -531,6 +586,37 @@ async function handleAgentTool(name, args) {
     }
   }
 
+  // ── list_agents ────────────────────────────────────────────────────────────
+  if (name === "list_agents") {
+    const agentsDir = process.env.MCP_AGENTS_DIR
+      || path.resolve(__dirname, "../../agents");
+    if (!fs.existsSync(agentsDir)) return "No agents directory found.";
+    try {
+      const entries = fs.readdirSync(agentsDir, { withFileTypes: true }).filter(e => e.isDirectory());
+      const agents = [];
+      for (const entry of entries) {
+        const agentDir  = path.join(agentsDir, entry.name);
+        const yamlFile  = ["agent.yaml", "agent.yml"]
+          .map(f => path.join(agentDir, f)).find(f => fs.existsSync(f));
+        if (!yamlFile) continue;
+        try {
+          const doc = yaml.load(fs.readFileSync(yamlFile, "utf8")) || {};
+          agents.push({
+            name:        doc.name        || entry.name,
+            description: doc.description || "",
+            file:        yamlFile,
+          });
+        } catch {}
+      }
+      if (!agents.length) return "No agents found in agents directory.";
+      return agents.map(a =>
+        `• ${a.name}${a.description ? ": " + a.description : ""}\n  file: ${a.file}`
+      ).join("\n\n");
+    } catch (err) {
+      return `Error reading agents directory: ${err.message}`;
+    }
+  }
+
   // ── list_pending_skills ────────────────────────────────────────────────────
   if (name === "list_pending_skills") {
     if (pendingChains.size === 0) return "No pending skills.";
@@ -603,7 +689,7 @@ async function callTool(toolName, args, toolMap, store) {
   if (toolName.startsWith("log_")) {
     return handleLogTool(toolName, args || {});
   }
-  if (["run_agent", "list_pending_skills", "approve_chain"].includes(toolName)) {
+  if (["run_agent", "list_agents", "list_pending_skills", "approve_chain"].includes(toolName)) {
     return handleAgentTool(toolName, args || {});
   }
   const entry = toolMap[toolName];
@@ -738,6 +824,21 @@ function startHttp(port, name, toolList, toolMap, store) {
     res.json({ status: "ok", name, tools: toolList.length, sessions: Object.keys(sessions).length });
   });
 
+  // Platform pushes LLM config here on every startup
+  app.post("/config", (req, res) => {
+    const { llm } = req.body || {};
+    if (llm && typeof llm === "object") {
+      if (llm.provider)          process.env.OE_LLM_PROVIDER           = llm.provider;
+      if (llm.apiKey)            process.env.OE_LLM_API_KEY            = llm.apiKey;
+      if (llm.model)             process.env.OE_LLM_MODEL              = llm.model;
+      if (llm.baseURL)           process.env.OE_LLM_BASE_URL           = llm.baseURL;
+      if (llm.azureEndpoint)     process.env.OE_LLM_AZURE_ENDPOINT     = llm.azureEndpoint;
+      if (llm.azureDeployment)   process.env.OE_LLM_AZURE_DEPLOYMENT   = llm.azureDeployment;
+      console.log(`[MCP] LLM config updated → provider: ${llm.provider}, model: ${llm.model}`);
+    }
+    res.json({ ok: true });
+  });
+
   app.listen(port, () => {
     console.log(`\n┌─────────────────────────────────────────┐`);
     console.log(`│  ${name.padEnd(39)}│`);
@@ -775,21 +876,24 @@ async function handleHttpMsg(msg, toolList, toolMap, store) {
 async function main() {
   const { config: configFile, port: cliPort, stdio } = parseArgs(process.argv.slice(2));
 
-  if (!fs.existsSync(configFile)) {
-    console.error(`\nError: config file not found: ${configFile}`);
-    console.error(`Run with --help for format.\n`);
-    process.exit(1);
+  let config = {};
+  if (fs.existsSync(configFile)) {
+    MEMORY_FILE = path.join(path.dirname(path.resolve(configFile)), "oe-mcp-memory.json");
+    LOG_FILE    = path.join(path.dirname(path.resolve(configFile)), "oe-mcp-log.json");
+    CONFIG_FILE = path.resolve(configFile);
+    const raw = fs.readFileSync(configFile, "utf8");
+    const ext = path.extname(configFile).toLowerCase();
+    config = (ext === ".yaml" || ext === ".yml") ? yaml.load(raw) : JSON.parse(raw);
+  } else {
+    console.warn(`[MCP] Config file not found: ${configFile} — starting with no connectors`);
+    const defaultDir = path.dirname(path.resolve(configFile));
+    MEMORY_FILE = path.join(defaultDir, "oe-mcp-memory.json");
+    LOG_FILE    = path.join(defaultDir, "oe-mcp-log.json");
+    CONFIG_FILE = path.resolve(configFile);
   }
 
-  MEMORY_FILE = path.join(path.dirname(path.resolve(configFile)), "oe-mcp-memory.json");
-  LOG_FILE    = path.join(path.dirname(path.resolve(configFile)), "oe-mcp-log.json");
-  CONFIG_FILE = path.resolve(configFile);
-
-  const raw        = fs.readFileSync(configFile, "utf8");
-  const ext        = path.extname(configFile).toLowerCase();
-  const config     = (ext === ".yaml" || ext === ".yml") ? yaml.load(raw) : JSON.parse(raw);
   const connectors = prepareConnectors(config.connectors);
-  const port       = cliPort || config.server?.port || 4040;
+  const port       = cliPort || config.server?.port || parseInt(process.env.MCP_PORT) || 3003;
   const name       = config.server?.name || "OE MCP";
 
   const store = {};
