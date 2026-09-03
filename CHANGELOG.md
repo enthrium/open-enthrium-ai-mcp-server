@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [v1.9.2] — 2026-09-03
+
+### Changed
+- **Version bump** — aligned with platform v1.9.2 release; no functional changes to MCP server in this release.
+
+---
+
 ## [v1.9.1] — 2026-09-02
 
 ### Changed
